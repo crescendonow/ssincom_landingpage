@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import get_settings
@@ -40,6 +40,16 @@ async def health() -> dict[str, bool]:
 @app.get("/", include_in_schema=False)
 async def frontend_root() -> RedirectResponse:
     return RedirectResponse(url="/frontend/")
+
+
+@app.get("/frontend", include_in_schema=False)
+async def frontend_without_slash() -> RedirectResponse:
+    return RedirectResponse(url="/frontend/")
+
+
+@app.get("/frontend/", include_in_schema=False)
+async def frontend_index() -> FileResponse:
+    return FileResponse(FRONTEND_DIR / "index.html")
 
 
 @app.get("/api/pdgroups", response_model=list[PdGroup])
