@@ -9,210 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --primary:#2b2b2b;
-  --primary-dark:#1a1a1a;
-  --gold:#c8a96e;
-  --gold-light:#e8d5a3;
-  --gold-pale:#faf5eb;
-  --red:#c41e2a;
-  --white:#ffffff;
-  --bg:#ffffff;
-  --surface:#f7f7f7;
-  --border:#e0e0e0;
-  --text:#1a1a1a;
-  --muted:#777777;
-  --dark-section:#222222;
-}
-html{scroll-behavior:smooth}
-body{font-family:'Kanit',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.7;font-weight:400}
-
-/* NAV */
-nav{background:var(--primary-dark);padding:0 6%;display:flex;align-items:center;justify-content:space-between;height:66px;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--gold)}
-.nav-logo{display:flex;align-items:center;gap:12px}
-.nav-logo-text{color:var(--white);font-size:17px;font-weight:500;letter-spacing:0.3px;line-height:1.3}
-.nav-logo-text span{color:var(--gold)}
-.nav-logo-sub{display:block;font-size:10px;color:rgba(255,255,255,0.45);font-weight:300;letter-spacing:1px}
-.nav-links{display:flex;gap:32px;list-style:none}
-.nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:400;transition:color 0.2s;letter-spacing:0.3px}
-.nav-links a:hover{color:var(--gold)}
-.nav-right{display:flex;align-items:center;gap:12px}
-.lang-btn{background:transparent;border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.7);padding:6px 14px;border-radius:3px;cursor:pointer;font-size:13px;font-family:'Kanit',sans-serif;transition:all 0.2s}
-.lang-btn:hover{border-color:var(--gold);color:var(--gold)}
-
-/* HERO */
-.hero{background:linear-gradient(135deg,#161616 0%,#242424 55%,#2e2920 100%);color:white;padding:90px 6% 70px;position:relative;overflow:hidden;text-align:center}
-.hero-deco{position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,0.13),transparent 70%);top:-120px;right:-100px;pointer-events:none}
-.hero-deco2{position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,0.08),transparent 70%);bottom:-140px;left:-80px;pointer-events:none}
-.hero-badge{display:inline-block;border:1px solid rgba(200,169,110,0.4);background:rgba(200,169,110,0.08);color:var(--gold-light);font-size:12px;letter-spacing:2px;padding:7px 20px;border-radius:30px;margin-bottom:24px;font-weight:400}
-.hero h1{font-size:44px;font-weight:600;line-height:1.3;letter-spacing:0.3px;margin-bottom:14px}
-.hero h1 .gold{color:var(--gold)}
-.hero-slogan{font-size:18px;color:var(--gold-light);font-weight:400;letter-spacing:1px;margin-bottom:18px}
-.hero p{max-width:640px;margin:0 auto 34px;color:rgba(255,255,255,0.6);font-size:15px;font-weight:300;line-height:1.9}
-.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:52px}
-.btn-gold{background:var(--gold);color:var(--primary-dark);padding:13px 30px;border-radius:3px;text-decoration:none;font-weight:600;font-size:15px;letter-spacing:0.3px;transition:opacity 0.2s;display:inline-block}
-.btn-gold:hover{opacity:0.88}
-.btn-ghost{border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.85);padding:13px 30px;border-radius:3px;text-decoration:none;font-weight:400;font-size:15px;transition:all 0.2s;display:inline-block}
-.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-.hero-stats{display:flex;gap:0;justify-content:center;flex-wrap:wrap}
-.stat-item{padding:0 44px;border-right:1px solid rgba(255,255,255,0.12)}
-.stat-item:last-child{border-right:none}
-.stat-num{font-size:26px;font-weight:600;color:var(--gold);letter-spacing:0.5px}
-.stat-label{font-size:12px;color:rgba(255,255,255,0.5);font-weight:300;letter-spacing:0.5px}
-
-/* KEYWORD STRIP */
-.kw-strip{background:var(--gold-pale);border-top:1px solid rgba(200,169,110,0.3);border-bottom:1px solid rgba(200,169,110,0.3);overflow:hidden;padding:12px 0;white-space:nowrap}
-.kw-inner{display:inline-flex;gap:14px;animation:kwscroll 40s linear infinite}
-.kw-item{display:inline-block;font-size:13px;color:#7a5800;font-weight:300;padding:3px 16px;border:1px solid rgba(200,169,110,0.35);border-radius:20px;background:rgba(255,255,255,0.6)}
-@keyframes kwscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* SECTIONS */
-section{padding:80px 6%}
-.section-eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:10px}
-h2{font-size:32px;font-weight:600;color:var(--text);margin-bottom:14px;letter-spacing:0.3px}
-.section-lead{color:var(--muted);font-size:15px;max-width:660px;margin-bottom:52px;line-height:1.9;font-weight:300}
-.divider{height:1px;background:var(--border);margin:0 6%}
-
-/* ABOUT */
-.about-section{background:var(--white)}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
-.about-body{font-size:14px;color:var(--muted);line-height:2;font-weight:300}
-.about-body p{margin-bottom:16px}
-.about-body p:last-child{margin-bottom:0}
-.about-body strong{color:var(--text);font-weight:500}
-.about-highlights{display:grid;gap:12px;margin-top:32px}
-.hl-row{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;background:var(--surface);border-left:3px solid var(--gold);border-radius:0 6px 6px 0}
-.hl-icon{width:36px;height:36px;min-width:36px;background:var(--gold-pale);border-radius:4px;display:flex;align-items:center;justify-content:center}
-.hl-icon svg{width:17px;height:17px;stroke:var(--primary);fill:none;stroke-width:1.8}
-.hl-text h4{font-size:14px;font-weight:500;margin-bottom:2px;color:var(--text)}
-.hl-text p{font-size:13px;color:var(--muted);font-weight:300}
-.info-card{background:var(--primary-dark);border-radius:6px;padding:36px;color:white;border-top:3px solid var(--gold)}
-.info-card h3{font-size:16px;color:var(--gold);margin-bottom:22px;font-weight:500;letter-spacing:0.5px}
-.info-list{list-style:none;display:grid;gap:16px}
-.info-list li{display:flex;gap:14px;font-size:14px;color:rgba(255,255,255,0.75);border-bottom:1px solid rgba(255,255,255,0.07);padding-bottom:16px;font-weight:300}
-.info-list li:last-child{border:none;padding-bottom:0}
-.i-label{color:var(--gold-light);min-width:90px;font-size:12px;letter-spacing:0.3px;font-weight:400;flex-shrink:0;padding-top:2px}
-
-/* PRODUCTS */
-.products-section{background:var(--surface)}
-.prod-tabs{display:flex;gap:0;margin-bottom:40px;border:1px solid var(--border);border-radius:4px;overflow:hidden;width:fit-content;max-width:100%;flex-wrap:wrap;background:var(--white)}
-.prod-tab{padding:10px 22px;border:none;font-size:14px;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s;font-family:'Kanit',sans-serif;font-weight:400;border-right:1px solid var(--border)}
-.prod-tab:last-child{border-right:none}
-.prod-tab.active{background:var(--primary-dark);color:var(--gold);font-weight:500}
-.prod-tab:hover:not(.active){background:var(--gold-pale);color:var(--text)}
-.prod-section{display:none}
-.prod-section.active{display:block}
-.core-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.prod-card{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:26px;transition:all 0.25s;cursor:default}
-.prod-card:hover{border-color:var(--gold);box-shadow:0 4px 20px rgba(0,0,0,0.06);transform:translateY(-2px)}
-.prod-card:hover .p-icon{background:var(--gold)}
-.prod-card:hover .p-icon svg{stroke:var(--primary-dark)}
-.p-icon{width:42px;height:42px;background:var(--primary-dark);border-radius:5px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;transition:all 0.25s}
-.p-icon svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:1.8;transition:stroke 0.25s}
-.prod-card h3{font-size:15px;font-weight:500;margin-bottom:4px;letter-spacing:0.2px}
-.prod-card .sub{font-size:12px;color:var(--muted);margin-bottom:16px;font-weight:300;letter-spacing:0.5px}
-.spec-list{list-style:none;display:grid;gap:0;margin-bottom:14px;border:1px solid var(--border);border-radius:4px;overflow:hidden}
-.spec-list li{display:flex;justify-content:space-between;font-size:13px;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--white);font-weight:300}
-.spec-list li:last-child{border:none}
-.spec-list li:nth-child(even){background:var(--surface)}
-.spec-list li span:first-child{color:var(--muted)}
-.spec-list li span:last-child{font-weight:500;color:var(--text)}
-.use-tag{background:var(--gold-pale);border:1px solid rgba(200,169,110,0.3);border-radius:4px;padding:8px 12px;font-size:12px;color:#5a3a00;font-weight:300;line-height:1.6}
-.app-intro{background:var(--white);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:20px 22px;margin-bottom:22px;font-size:14px;color:var(--muted);line-height:1.9;font-weight:300}
-.app-intro strong{color:var(--text);font-weight:500}
-.app-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.app-card{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:20px;transition:border-color 0.2s}
-.app-card:hover{border-color:var(--gold)}
-.app-card h4{font-size:14px;font-weight:500;margin-bottom:6px;color:var(--text)}
-.app-card p{font-size:13px;color:var(--muted);font-weight:300;line-height:1.7}
-.app-tag{display:inline-block;background:var(--gold-pale);color:#7a5800;font-size:11px;padding:2px 9px;border-radius:2px;margin-bottom:9px;font-weight:500;letter-spacing:0.5px;border:1px solid rgba(200,169,110,0.3)}
-.custom-banner{margin-top:22px;background:var(--primary-dark);border-radius:6px;padding:26px 30px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;border-left:4px solid var(--gold)}
-.custom-banner p{color:rgba(255,255,255,0.85);font-size:15px;font-weight:400}
-.custom-banner p strong{color:var(--gold-light);font-weight:500}
-.custom-banner span{font-size:14px;font-weight:300;color:rgba(255,255,255,0.6)}
-
-/* SIZE TABLE */
-.size-table-wrap{background:var(--white);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:22px}
-.size-table{width:100%;border-collapse:collapse}
-.size-table thead th{background:var(--primary-dark);color:var(--gold);font-size:13px;font-weight:500;letter-spacing:0.5px;padding:13px 18px;text-align:left;border-bottom:2px solid var(--gold)}
-.size-table tbody td{padding:11px 18px;font-size:13.5px;font-weight:300;color:var(--text);border-bottom:1px solid var(--border)}
-.size-table tbody tr:last-child td{border-bottom:none}
-.size-table tbody tr:nth-child(even){background:var(--surface)}
-.size-table tbody tr:hover{background:var(--gold-pale)}
-.size-cat{display:inline-block;font-size:11px;padding:2px 10px;border-radius:2px;font-weight:500;letter-spacing:0.3px}
-.size-cat.large{background:rgba(196,30,42,0.08);color:var(--red);border:1px solid rgba(196,30,42,0.25)}
-.size-cat.small{background:var(--gold-pale);color:#7a5800;border:1px solid rgba(200,169,110,0.35)}
-.size-cat.fine{background:#eef4ee;color:#3a6b3a;border:1px solid rgba(90,140,90,0.35)}
-.size-mm{font-weight:500;color:var(--text)}
-.size-note{font-size:13px;color:var(--muted);font-weight:300;line-height:1.9;background:var(--gold-pale);border:1px solid rgba(200,169,110,0.3);border-radius:4px;padding:14px 18px}
-.size-note strong{color:#5a3a00;font-weight:500}
-
-/* MAP */
-.map-section{background:var(--white)}
-.map-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:40px;align-items:stretch}
-.map-info{display:flex;flex-direction:column;gap:20px;justify-content:center}
-.map-frame{border:1px solid var(--border);border-radius:6px;overflow:hidden;border-top:3px solid var(--gold);min-height:380px}
-.map-frame iframe{width:100%;height:100%;min-height:380px;border:0;display:block}
-.map-card{background:var(--surface);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:18px 20px}
-.map-card h4{font-size:14px;font-weight:500;margin-bottom:4px}
-.map-card p{font-size:13.5px;color:var(--muted);font-weight:300;line-height:1.8}
-.map-card a{color:#8a6420;text-decoration:none;font-weight:400}
-.map-card a:hover{text-decoration:underline}
-
-/* CONTACT */
-.contact-section{background:var(--dark-section);color:white}
-.contact-section h2{color:white}
-.contact-section .section-lead{color:rgba(255,255,255,0.55)}
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start}
-.c-info{display:grid;gap:22px}
-.c-row{display:flex;gap:16px;align-items:flex-start}
-.c-icon{width:40px;height:40px;min-width:40px;background:rgba(200,169,110,0.12);border-radius:4px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(200,169,110,0.2)}
-.c-icon svg{width:17px;height:17px;stroke:var(--gold);fill:none;stroke-width:1.8}
-.c-row h4{font-size:12px;font-weight:500;color:var(--gold-light);margin-bottom:3px;letter-spacing:0.5px;text-transform:uppercase}
-.c-row p{font-size:14px;color:rgba(255,255,255,0.7);font-weight:300;line-height:1.7}
-.c-row a{color:var(--gold-light);text-decoration:none}
-.c-row a:hover{text-decoration:underline}
-.c-form{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:30px;border-top:3px solid var(--gold)}
-.fg{margin-bottom:14px}
-.fg label{display:block;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:5px;letter-spacing:0.5px;font-weight:400}
-.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:3px;padding:10px 14px;color:white;font-size:14px;font-family:'Kanit',sans-serif;font-weight:300;outline:none;transition:border-color 0.2s}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold)}
-.fg select option{background:#222;color:white}
-.fg textarea{resize:vertical;min-height:78px}
-.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.btn-submit{width:100%;background:var(--gold);color:var(--primary-dark);border:none;padding:13px;border-radius:3px;font-weight:600;font-size:15px;cursor:pointer;transition:opacity 0.2s;margin-top:6px;font-family:'Kanit',sans-serif;letter-spacing:0.3px}
-.btn-submit:hover{opacity:0.88}
-.form-note{font-size:12px;color:rgba(255,255,255,0.3);margin-top:8px;text-align:center;font-weight:300}
-.success-msg{display:none;text-align:center;padding:28px;color:var(--gold-light);font-size:15px;line-height:2}
-
-footer{background:#111;padding:24px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-top:2px solid rgba(200,169,110,0.3)}
-footer p{color:rgba(255,255,255,0.3);font-size:13px;font-weight:300}
-
-/* LANG */
-.th{display:block}.en{display:none}
-body.lang-en .th{display:none}
-body.lang-en .en{display:block}
-.th-i{display:inline}.en-i{display:none}
-body.lang-en .th-i{display:none}
-body.lang-en .en-i{display:inline}
-
-/* RESPONSIVE */
-@media(max-width:900px){
-  .nav-links{display:none}
-  .hero h1{font-size:32px}
-  .about-grid,.contact-grid,.map-grid{grid-template-columns:1fr}
-  .core-grid,.app-grid{grid-template-columns:1fr 1fr}
-  .stat-item{padding:0 22px}
-}
-@media(max-width:600px){
-  .core-grid,.app-grid{grid-template-columns:1fr}
-  .hero h1{font-size:27px}
-  section{padding:60px 5%}
-  .size-table thead th,.size-table tbody td{padding:9px 10px;font-size:12.5px}
-}
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -230,7 +27,7 @@ body.lang-en .en-i{display:inline}
     <li><a href="#contact"><span class="th-i">ติดต่อ</span><span class="en-i">Contact</span></a></li>
   </ul>
   <div class="nav-right">
-    <button class="lang-btn" onclick="toggleLang()">EN / TH</button>
+    <button class="lang-btn" id="lang-toggle" type="button">EN / TH</button>
   </div>
 </nav>
 
@@ -356,10 +153,10 @@ body.lang-en .en-i{display:inline}
     <span class="en">Freshwater and river sand from trusted sources, precision-sieved to grade. Industrial sand in any size — specify your requirements and we'll deliver.</span>
   </p>
   <div class="prod-tabs">
-    <button class="prod-tab active" onclick="switchTab('core',this)"><span class="th-i">ผลิตภัณฑ์หลัก</span><span class="en-i">Core Products</span></button>
-    <button class="prod-tab" onclick="switchTab('sizes',this)"><span class="th-i">ตารางขนาดทราย</span><span class="en-i">Size Chart</span></button>
-    <button class="prod-tab" onclick="switchTab('industrial',this)"><span class="th-i">งานอุตสาหกรรม</span><span class="en-i">Industrial</span></button>
-    <button class="prod-tab" onclick="switchTab('flooring',this)"><span class="th-i">งานพื้น & กันซึม</span><span class="en-i">Flooring & Waterproofing</span></button>
+    <button class="prod-tab active" type="button" data-tab="core"><span class="th-i">ผลิตภัณฑ์หลัก</span><span class="en-i">Core Products</span></button>
+    <button class="prod-tab" type="button" data-tab="sizes"><span class="th-i">ตารางขนาดทราย</span><span class="en-i">Size Chart</span></button>
+    <button class="prod-tab" type="button" data-tab="industrial"><span class="th-i">งานอุตสาหกรรม</span><span class="en-i">Industrial</span></button>
+    <button class="prod-tab" type="button" data-tab="flooring"><span class="th-i">งานพื้น & กันซึม</span><span class="en-i">Flooring & Waterproofing</span></button>
   </div>
 
   <!-- CORE -->
@@ -572,40 +369,25 @@ body.lang-en .en-i{display:inline}
       </div>
     </div>
     <div class="c-form">
-      <div id="form-area">
+      <form id="form-area" class="quote-form">
         <div class="fg-row">
-          <div class="fg"><label><span class="th">ชื่อ-นามสกุล</span><span class="en">Full Name</span></label><input type="text" id="fname" placeholder="..."></div>
-          <div class="fg"><label><span class="th">บริษัท/องค์กร</span><span class="en">Company</span></label><input type="text" placeholder="..."></div>
+          <div class="fg"><label><span class="th">ชื่อ-นามสกุล</span><span class="en">Full Name</span></label><input type="text" id="person_name" name="person_name" placeholder="..." required></div>
+          <div class="fg"><label><span class="th">บริษัท/องค์กร</span><span class="en">Company</span></label><input type="text" id="org_name" name="org_name" placeholder="..."></div>
         </div>
         <div class="fg-row">
-          <div class="fg"><label><span class="th">เบอร์โทรศัพท์</span><span class="en">Phone</span></label><input type="tel" id="fphone" placeholder="0XX-XXX-XXXX"></div>
-          <div class="fg"><label><span class="th">อีเมล</span><span class="en">Email</span></label><input type="email" placeholder="your@email.com"></div>
+          <div class="fg"><label><span class="th">เบอร์โทรศัพท์</span><span class="en">Phone</span></label><input type="tel" id="tel" name="tel" placeholder="0XX-XXX-XXXX" required></div>
+          <div class="fg"><label><span class="th">อีเมล</span><span class="en">Email</span></label><input type="email" id="email" name="email" placeholder="your@email.com"></div>
         </div>
         <div class="fg">
           <label><span class="th">ประเภทสินค้า / การใช้งาน</span><span class="en">Product / Application</span></label>
-          <select>
-            <option value="">-- เลือกประเภท / Select --</option>
-            <option>ทรายอุตสาหกรรมคัดขนาด / Industrial Sieve Sand</option>
-            <option>ทรายเม็ดใหญ่ผ่านตะแกรง (Gravall) 6–25 มม.</option>
-            <option>ทรายเม็ดเล็กผ่านตะแกรง 0.5–4.5 มม.</option>
-            <option>ทรายละเอียด 0.125–0.66 / 0.5–1.4 มม.</option>
-            <option>Boiler Sand — ทรายหม้อน้ำ</option>
-            <option>ทรายโรงไฟฟ้าชีวมวล / Biomass Power</option>
-            <option>ทรายโรงไฟฟ้าถ่านหิน / Coal Power</option>
-            <option>ทรายกรองน้ำ / Water Filtration Sand</option>
-            <option>ทรายสำหรับอุตสาหกรรมเคมี</option>
-            <option>ทรายโรงหล่อโลหะ / Foundry Sand</option>
-            <option>ทรายงานพื้น Epoxy / Polyurethane</option>
-            <option>ทรายงานกันซึม / Waterproofing</option>
-            <option>อื่นๆ / Other</option>
-          </select>
+          <select id="pdgroup_id" name="pdgroup_id"><option value="">-- เลือกประเภท / Select --</option></select>
         </div>
-        <div class="fg"><label><span class="th">ขนาดที่ต้องการ (ถ้าทราบ)</span><span class="en">Required Size (if known)</span></label><input type="text" placeholder="เช่น # 20-30 (0.80–0.50 มม.) / Custom spec..."></div>
-        <div class="fg"><label><span class="th">สถานที่จัดส่ง</span><span class="en">Delivery Location</span></label><input type="text" placeholder="จังหวัด / Province..."></div>
-        <div class="fg"><label><span class="th">รายละเอียด / ปริมาณที่ต้องการ</span><span class="en">Details / Quantity</span></label><textarea placeholder="..."></textarea></div>
-        <button class="btn-submit" onclick="submitForm()"><span class="th">ส่งคำขอใบเสนอราคา</span><span class="en">Submit Quote Request</span></button>
+        <div class="fg"><label><span class="th">ขนาดที่ต้องการ (ถ้าทราบ)</span><span class="en">Required Size (if known)</span></label><input type="text" id="req_size" name="req_size" placeholder="เช่น # 20-30 (0.80–0.50 มม.) / Custom spec..."></div>
+        <div class="fg"><label><span class="th">สถานที่จัดส่ง</span><span class="en">Delivery Location</span></label><input type="text" id="address_send" name="address_send" placeholder="จังหวัด / Province..."></div>
+        <div class="fg"><label><span class="th">รายละเอียด / ปริมาณที่ต้องการ</span><span class="en">Details / Quantity</span></label><textarea id="detail" name="detail" placeholder="..."></textarea></div>
+        <button class="btn-submit" type="submit" id="contact-submit"><span class="th">ส่งคำขอใบเสนอราคา</span><span class="en">Submit Quote Request</span></button>
         <p class="form-note"><span class="th">เราจะติดต่อกลับภายใน 1 วันทำการ</span><span class="en">We'll respond within 1 business day.</span></p>
-      </div>
+      </form>
       <div class="success-msg" id="success-msg">
         ✅ <strong><span class="th">ส่งคำขอเรียบร้อยแล้ว!</span><span class="en">Request Submitted!</span></strong><br>
         <span style="font-size:14px;color:rgba(255,255,255,0.55);font-weight:300">
@@ -622,24 +404,6 @@ body.lang-en .en-i{display:inline}
   <p>69 ม.10 ต.พังตรุ อ.พนมทวน จ.กาญจนบุรี 71140 · <span style="color:var(--gold)">contact@ssincom.com</span></p>
 </footer>
 
-<script>
-function toggleLang(){document.body.classList.toggle('lang-en')}
-function switchTab(id,btn){
-  document.querySelectorAll('.prod-section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.prod-tab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  btn.classList.add('active');
-}
-function submitForm(){
-  const n=document.getElementById('fname').value;
-  const p=document.getElementById('fphone').value;
-  if(!n.trim()||!p.trim()){
-    alert(document.body.classList.contains('lang-en')?'Please fill in name and phone.':'กรุณากรอกชื่อและเบอร์โทรศัพท์');
-    return;
-  }
-  document.getElementById('form-area').style.display='none';
-  document.getElementById('success-msg').style.display='block';
-}
-</script>
+<script src="app.js" defer></script>
 </body>
 </html>
