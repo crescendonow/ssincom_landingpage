@@ -17,7 +17,7 @@ Landing page ของ S&S Incom ที่ deploy เป็น FastAPI applicati
    - Entry point คือ `backend.main:app`
    - เชื่อม PostgreSQL ด้วย `asyncpg`
    - ใช้ environment variables จาก Railway หรือ local `.env`
-   - Serve frontend ผ่าน `StaticFiles` ที่ path `/`
+   - Redirect `/` ไป `/frontend/` และ serve frontend ผ่าน `StaticFiles` ที่ path `/frontend`
 
 3. **External Services**
    - PostgreSQL database สำหรับ `quotation.pdgroup` และ `quotation.contact_customer`
@@ -42,6 +42,9 @@ Landing page ของ S&S Incom ที่ deploy เป็น FastAPI applicati
   - submit contact form ไปที่ `POST /api/contact`
 
 ### Backend API
+
+- `GET /`  
+  Redirect ไปที่ `/frontend/`
 
 - `GET /api/health`  
   ใช้ตรวจสอบว่า FastAPI app ทำงานอยู่
@@ -161,9 +164,9 @@ python -c "import backend.main; print(backend.main.app.title)"
 
 หลัง deploy บน Railway ให้ตรวจ:
 
+- เปิด `/` แล้วต้อง redirect ไป `/frontend/`
 - เปิด `/api/health`
 - เปิด `/api/pdgroups`
 - submit contact form จากหน้าเว็บ
 - ตรวจ row ใหม่ใน `quotation.contact_customer`
 - ตรวจ email ที่ `contact@ssincom.com` และ `mailtossincom@gmail.com`
-

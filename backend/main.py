@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import get_settings
@@ -34,6 +35,11 @@ app = FastAPI(title="S&S Incom Landing Page", lifespan=lifespan)
 @app.get("/api/health")
 async def health() -> dict[str, bool]:
     return {"ok": True}
+
+
+@app.get("/", include_in_schema=False)
+async def frontend_root() -> RedirectResponse:
+    return RedirectResponse(url="/frontend/")
 
 
 @app.get("/api/pdgroups", response_model=list[PdGroup])
@@ -96,4 +102,4 @@ async def create_contact(contact: ContactRequest) -> ContactResponse:
     return ContactResponse(ok=True, idx=idx, email_sent=email_sent)
 
 
-app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
+app.mount("/frontend", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
