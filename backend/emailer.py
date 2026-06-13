@@ -46,14 +46,18 @@ def _build_message(settings: Settings, contact: ContactRequest, idx: int, pdgrou
 
 
 def _send_sync(settings: Settings, message: EmailMessage) -> None:
-    if settings.smtp_use_tls:
-        with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=20) as smtp:
-            smtp.starttls()
+    # Port 465 is always implicit SSL, so treat it as SSL regardless of the
+    # SMTP_USE_TLS flag. This avoids the "465 + SMTP_USE_TLS=true" trap, where a
+    # plaintext STARTTLS connect to an SSL port gets reset by the server.
+    use_implicit_ssl = settings.smtp_port == 465 or not settings.smtp_use_tls
+    if use_implicit_ssl:
+        with smtplib.SMTP_SSL(settings.smtp_host, settings.smtp_port, timeout=20) as smtp:
             if settings.smtp_user and settings.smtp_password:
                 smtp.login(settings.smtp_user, settings.smtp_password)
             smtp.send_message(message)
     else:
-        with smtplib.SMTP_SSL(settings.smtp_host, settings.smtp_port, timeout=20) as smtp:
+        with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=20) as smtp:
+            smtp.starttls()
             if settings.smtp_user and settings.smtp_password:
                 smtp.login(settings.smtp_user, settings.smtp_password)
             smtp.send_message(message)
@@ -74,5 +78,11 @@ async def send_contact_email(
         await anyio.to_thread.run_sync(_send_sync, settings, message)
         return True
     except Exception:
-        logger.exception("Failed to send contact request email for idx=%s", idx)
+        logger.exception(
+            "Failed to send contact email idx=%s via %s:%s (use_tls=%s)",
+            idx,
+            settings.smtp_host,
+            settings.smtp_port,
+            settings.smtp_use_tls,
+        )
         return False
