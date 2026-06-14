@@ -21,6 +21,7 @@ class Settings:
     smtp_from: str
     smtp_use_tls: bool
     mail_recipients: tuple[str, ...]
+    bill_base_url: str
 
     @property
     def smtp_configured(self) -> bool:
@@ -52,4 +53,5 @@ def get_settings() -> Settings:
         smtp_from=os.getenv("SMTP_FROM", os.getenv("SMTP_USER", "noreply@ssincom.com")),
         smtp_use_tls=_env_bool("SMTP_USE_TLS", True),
         mail_recipients=recipients,
+        bill_base_url=os.getenv("BILL_BASE_URL", "https://ssincombill-production.up.railway.app"),
     )

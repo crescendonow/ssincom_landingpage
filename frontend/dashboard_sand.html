@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>รายงานยอดขายทราย — S&S Incom</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --charcoal: #2d2d2d;
+      --gold: #c9a84c;
+      --gold-light: #f0d98c;
+      --bg: #f5f5f3;
+      --white: #ffffff;
+      --border: #e0e0dc;
+      --text-muted: #888;
+    }
+
+    body { font-family: 'Kanit', sans-serif; background: var(--bg); color: var(--charcoal); min-height: 100vh; }
+
+    /* TOP BAR */
+    .topbar {
+      background: var(--charcoal); color: #fff;
+      padding: 14px 24px; display: flex; align-items: center; gap: 16px;
+    }
+    .topbar .logo-text { font-size: 1.2rem; font-weight: 600; color: var(--gold); }
+    .topbar .page-title { font-size: 0.95rem; color: #ccc; }
+    .topbar a.home-link { margin-left: auto; color: #aaa; font-size: 0.85rem; text-decoration: none; }
+    .topbar a.home-link:hover { color: var(--gold); }
+
+    .main { max-width: 1400px; margin: 0 auto; padding: 24px 16px 48px; }
+
+    /* FILTER */
+    .filter-bar {
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+      padding: 14px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 18px;
+    }
+    .filter-bar label { font-size: 0.875rem; color: #555; font-weight: 500; }
+    .filter-bar select, .filter-bar button {
+      font-family: 'Kanit', sans-serif; font-size: 0.875rem;
+      border: 1px solid #ccc; border-radius: 6px; padding: 7px 14px; cursor: pointer;
+    }
+    .filter-bar select { background: #fff; color: var(--charcoal); }
+    .btn-primary { background: var(--gold); border-color: var(--gold) !important; color: var(--charcoal); font-weight: 600; }
+    .btn-primary:hover { background: #b8932e; }
+
+    /* KPI CARDS */
+    .kpi-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px; margin-bottom: 18px;
+    }
+    .kpi-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px;
+    }
+    .kpi-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+    .kpi-value { font-size: 1.25rem; font-weight: 600; }
+    .kpi-value.gold { color: var(--gold); }
+
+    /* STATUS */
+    #statusBar { text-align: center; padding: 28px; color: var(--text-muted); font-size: 0.9rem; }
+
+    /* TABLE CARD */
+    .table-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .table-wrap .card-title {
+      padding: 13px 18px; font-size: 0.9rem; font-weight: 600;
+      border-bottom: 1px solid var(--border); color: var(--charcoal);
+    }
+    .table-scroll { overflow-x: auto; }
+
+    /* SUMMARY TABLE (6-col) */
+    table.summary-tbl { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    table.summary-tbl thead th {
+      background: var(--charcoal); color: #fff;
+      padding: 10px 12px; text-align: center; white-space: nowrap; font-weight: 500;
+    }
+
+    tr.row-year { background: var(--charcoal); color: var(--gold-light); font-weight: 600; cursor: pointer; }
+    tr.row-year:hover { filter: brightness(1.18); }
+    tr.row-year td { padding: 11px 12px; border-bottom: 2px solid #555; }
+
+    tr.row-half { background: #3e3e3c; color: var(--gold-light); font-weight: 500; cursor: pointer; }
+    tr.row-half:hover { filter: brightness(1.2); }
+    tr.row-half td { padding: 9px 12px; border-bottom: 1px solid #555; }
+
+    tr.row-month { background: #faf9f6; color: var(--charcoal); cursor: pointer; }
+    tr.row-month:hover { background: #f0ede6; }
+    tr.row-month td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+
+    /* INVOICE WRAPPER ROW */
+    tr.row-inv-wrap td {
+      padding: 0; background: #f0efeb;
+      border-bottom: 3px solid #ccc;
+    }
+    .inv-section { padding: 0 0 8px 0; }
+
+    /* INVOICE NESTED TABLE */
+    table.inv-tbl { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    table.inv-tbl thead th {
+      background: #3a3a38; color: var(--gold-light);
+      padding: 7px 10px; text-align: center; white-space: nowrap; font-weight: 500;
+    }
+    table.inv-tbl tr.inv-row { background: var(--white); }
+    table.inv-tbl tr.inv-row:hover { background: #faf9f5; }
+    table.inv-tbl tr.inv-row td { padding: 6px 10px; border-bottom: 1px solid #f0efeb; white-space: nowrap; }
+    table.inv-tbl tr.inv-row td.wrap { white-space: normal; min-width: 140px; max-width: 240px; }
+    table.inv-tbl tr.inv-total td {
+      background: #e8e7e3; font-weight: 600;
+      padding: 7px 10px; border-top: 2px solid #bbb;
+    }
+    table.inv-tbl .loading-row td { text-align: center; padding: 14px; color: var(--text-muted); }
+
+    /* SHARED */
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .ctr { text-align: center; }
+    .indent-1 { padding-left: 28px !important; }
+    .indent-2 { padding-left: 48px !important; }
+    .indent-3 { padding-left: 60px !important; }
+
+    .toggle-icon { display: inline-block; width: 14px; transition: transform 0.15s; font-size: 0.7rem; }
+    .toggle-icon.open { transform: rotate(90deg); }
+
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid #ddd; border-top-color: var(--gold);
+      border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 640px) {
+      .topbar .page-title { display: none; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="logo-text">S&S INCOM</span>
+  <span class="page-title">รายงานยอดขายทราย</span>
+  <a class="home-link" href="/frontend/">← หน้าหลัก</a>
+</div>
+
+<div class="main">
+
+  <div class="filter-bar">
+    <label for="filterYear">ปี (ค.ศ.):</label>
+    <select id="filterYear"><option value="">ทุกปี</option></select>
+    <button class="btn-primary" id="btnLoad">โหลดข้อมูล</button>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">จำนวนใบกำกับ</div><div class="kpi-value" id="kpiCount">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">จำนวนตันรวม</div><div class="kpi-value gold" id="kpiTon">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">มูลค่าก่อน VAT (บาท)</div><div class="kpi-value" id="kpiBefore">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">VAT 7% (บาท)</div><div class="kpi-value" id="kpiVat">—</div></div>
+    <div class="kpi-card"><div class="kpi-label">รวมทั้งสิ้น (บาท)</div><div class="kpi-value gold" id="kpiGrand">—</div></div>
+  </div>
+
+  <div id="statusBar"><span class="spinner"></span>กำลังโหลดข้อมูล...</div>
+
+  <div class="table-wrap hidden" id="tableWrap">
+    <div class="card-title">สรุปยอดขายทราย &nbsp;—&nbsp; คลิกแถวเพื่อขยายรายละเอียด</div>
+    <div class="table-scroll">
+      <table class="summary-tbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:200px">รายการ</th>
+            <th style="min-width:90px">ใบกำกับ</th>
+            <th style="min-width:110px">จำนวนตัน</th>
+            <th style="min-width:130px;text-align:right">มูลค่าก่อน VAT</th>
+            <th style="min-width:110px;text-align:right">VAT 7%</th>
+            <th style="min-width:130px;text-align:right">รวมทั้งสิ้น</th>
+          </tr>
+        </thead>
+        <tbody id="mainBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const SUMMARY_API = "/api/dashboard/saletax_summary";
+  const LIST_API    = "/api/dashboard/saletax_list";
+
+  const TH_MONTHS = [
+    "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+    "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
+  ];
+
+  const fmt2  = n => Number(n||0).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fmt3  = n => Number(n||0).toLocaleString("th-TH",{minimumFractionDigits:3,maximumFractionDigits:3});
+  const fmtN  = n => Number(n||0).toLocaleString("th-TH");
+  const thY   = y => parseInt(y,10)+543;
+
+  function thaiDate(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso + "T00:00:00");
+    return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()+543}`;
+  }
+
+  /* ===== STATE ===== */
+  const S = {
+    yearRows:   [],      // [{period,count,before_vat,vat,grand}] granularity=year
+    monthCache: {},      // year -> [{period,count,...}] granularity=month
+    invCache:   {},      // "YYYY-MM" -> [invoice...]
+    openYears:  new Set(),
+    openHalves: new Set(),  // "2025-H1"
+    openMonths: new Set(),  // "2025-01"
+  };
+
+  const statusBar = document.getElementById("statusBar");
+  const tableWrap = document.getElementById("tableWrap");
+  const tbody     = document.getElementById("mainBody");
+  const selYear   = document.getElementById("filterYear");
+
+  document.getElementById("btnLoad").addEventListener("click", loadDashboard);
+
+  /* ===== BOOT ===== */
+  async function boot() {
+    const cur = new Date().getFullYear();
+    for (let y = cur; y >= cur - 4; y--) {
+      const o = document.createElement("option");
+      o.value = y; o.textContent = `${y}  (พ.ศ. ${y+543})`;
+      selYear.appendChild(o);
+    }
+    await loadDashboard();
+  }
+
+  /* ===== LOAD YEAR SUMMARY ===== */
+  async function loadDashboard() {
+    setStatus("กำลังโหลด...", true);
+    tableWrap.classList.add("hidden");
+    S.openYears.clear(); S.openHalves.clear(); S.openMonths.clear();
+    S.monthCache = {}; S.invCache = {};
+
+    const yr = selYear.value;
+    const p  = new URLSearchParams({ granularity: "year" });
+    if (yr) p.set("year", yr);
+
+    try {
+      const res = await fetch(`${SUMMARY_API}?${p}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      let rows = await res.json();
+      if (yr) rows = rows.filter(r => r.period === String(yr));
+      S.yearRows = rows;
+      updateKPI(rows);
+      render();
+      tableWrap.classList.remove("hidden");
+      statusBar.classList.add("hidden");
+    } catch(e) { setStatus(`โหลดล้มเหลว: ${e.message}`, false); }
+  }
+
+  function updateKPI(rows) {
+    let cnt=0, bv=0, vt=0, gd=0;
+    rows.forEach(r => { cnt+=r.count||0; bv+=r.before_vat||0; vt+=r.vat||0; gd+=r.grand||0; });
+    document.getElementById("kpiCount").textContent  = fmtN(cnt);
+    document.getElementById("kpiBefore").textContent = fmt2(bv);
+    document.getElementById("kpiVat").textContent    = fmt2(vt);
+    document.getElementById("kpiGrand").textContent  = fmt2(gd);
+    document.getElementById("kpiTon").textContent    = "—";
+  }
+
+  function refreshTonKPI() {
+    const tot = Object.values(S.invCache).flat().reduce((s,r) => s+(r.sum_qty||0), 0);
+    document.getElementById("kpiTon").textContent = tot > 0 ? fmt3(tot) : "—";
+  }
+
+  /* ===== RENDER (full redraw) ===== */
+  function render() {
+    tbody.innerHTML = "";
+    S.yearRows.forEach(yr => {
+      addYearRow(yr);
+      if (!S.openYears.has(yr.period)) return;
+
+      const months = S.monthCache[yr.period] || [];
+      const h1 = months.filter(r => monthNum(r.period) <= 6);
+      const h2 = months.filter(r => monthNum(r.period) >= 7);
+
+      addHalfRow(yr.period, "H1", "ม.ค. – มิ.ย.", h1);
+      addHalfRow(yr.period, "H2", "ก.ค. – ธ.ค.", h2);
+    });
+  }
+
+  function monthNum(period) { return parseInt(period.split("-")[1]||"0",10); }
+
+  /* ===== YEAR ROW ===== */
+  function addYearRow(yr) {
+    const open = S.openYears.has(yr.period);
+    const tr = mkTr("row-year");
+    tr.dataset.yr = yr.period;
+    tr.innerHTML = `
+      <td><span class="toggle-icon ${open?"open":""}">▶</span> ปี พ.ศ. ${thY(yr.period)} (${yr.period})</td>
+      <td class="ctr">${fmtN(yr.count)}</td>
+      <td class="ctr">—</td>
+      <td class="num">${fmt2(yr.before_vat)}</td>
+      <td class="num">${fmt2(yr.vat)}</td>
+      <td class="num">${fmt2(yr.grand)}</td>`;
+    tr.onclick = () => toggleYear(yr.period);
+    tbody.appendChild(tr);
+  }
+
+  async function toggleYear(year) {
+    if (S.openYears.has(year)) {
+      S.openYears.delete(year);
+      pruneHalvesMonths(year);
+      render(); return;
+    }
+    S.openYears.add(year);
+    if (!S.monthCache[year]) {
+      try { await loadMonths(year); }
+      catch(e) {
+        alert(`โหลดข้อมูลปี ${year} ล้มเหลว: ${e.message}`);
+        S.openYears.delete(year);
+        render(); return;
+      }
+    }
+    render();
+  }
+
+  async function loadMonths(year) {
+    const tr = tbody.querySelector(`tr[data-yr="${year}"]`);
+    if (tr) tr.cells[0].innerHTML = `<span class="spinner"></span> กำลังโหลด...`;
+    const res = await fetch(`${SUMMARY_API}?granularity=month&year=${year}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    S.monthCache[year] = await res.json();
+  }
+
+  /* ===== HALF ROW ===== */
+  function addHalfRow(year, half, label, months) {
+    const key  = `${year}-${half}`;
+    const open = S.openHalves.has(key);
+    const tot  = sum(months);
+    const tr   = mkTr("row-half");
+    tr.innerHTML = `
+      <td class="indent-1"><span class="toggle-icon ${open?"open":""}">▶</span> ${label} (${half})</td>
+      <td class="ctr">${fmtN(tot.count)}</td>
+      <td class="ctr">—</td>
+      <td class="num">${fmt2(tot.before_vat)}</td>
+      <td class="num">${fmt2(tot.vat)}</td>
+      <td class="num">${fmt2(tot.grand)}</td>`;
+    tr.onclick = () => toggleHalf(key, year, months);
+    tbody.appendChild(tr);
+
+    if (open) months.forEach(mr => addMonthRow(mr));
+  }
+
+  function toggleHalf(key, year, months) {
+    if (S.openHalves.has(key)) {
+      S.openHalves.delete(key);
+      months.forEach(mr => S.openMonths.delete(mr.period));
+    } else {
+      S.openHalves.add(key);
+    }
+    render();
+  }
+
+  /* ===== MONTH ROW ===== */
+  function addMonthRow(mr) {
+    const [y, m] = mr.period.split("-");
+    const label  = `${TH_MONTHS[parseInt(m,10)-1]} ${thY(y)}`;
+    const open   = S.openMonths.has(mr.period);
+
+    // find cached ton for this month
+    const invs = S.invCache[mr.period] || [];
+    const ton  = invs.reduce((s,r)=>s+(r.sum_qty||0),0);
+
+    const tr = mkTr("row-month");
+    tr.setAttribute("data-month", mr.period);
+    tr.innerHTML = `
+      <td class="indent-2"><span class="toggle-icon ${open?"open":""}">▶</span> ${label}</td>
+      <td class="ctr">${fmtN(mr.count)}</td>
+      <td class="ctr">${invs.length ? fmt3(ton) : "—"}</td>
+      <td class="num">${fmt2(mr.before_vat)}</td>
+      <td class="num">${fmt2(mr.vat)}</td>
+      <td class="num">${fmt2(mr.grand)}</td>`;
+    tr.onclick = () => toggleMonth(mr.period);
+    tbody.appendChild(tr);
+
+    if (open) addInvWrapRow(mr.period);
+  }
+
+  async function toggleMonth(period) {
+    if (S.openMonths.has(period)) {
+      S.openMonths.delete(period);
+      render(); return;
+    }
+    S.openMonths.add(period);
+    if (!S.invCache[period]) {
+      render(); // show loading first
+      try {
+        const res = await fetch(`${LIST_API}?month=${period}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        S.invCache[period] = await res.json();
+        refreshTonKPI();
+      } catch(e) {
+        alert(`โหลดใบกำกับล้มเหลว: ${e.message}`);
+        S.openMonths.delete(period);
+      }
+    }
+    render();
+  }
+
+  /* ===== INVOICE WRAPPER ROW (colspan=6 with nested table) ===== */
+  function addInvWrapRow(period) {
+    const wtr = document.createElement("tr");
+    wtr.className = "row-inv-wrap";
+    const td = document.createElement("td");
+    td.colSpan = 6;
+    wtr.appendChild(td);
+
+    const invRows = S.invCache[period];
+
+    if (!invRows) {
+      td.innerHTML = `<div style="padding:14px 20px;color:#888"><span class="spinner"></span>กำลังโหลดรายการใบกำกับ...</div>`;
+      tbody.appendChild(wtr);
+      return;
+    }
+
+    if (!invRows.length) {
+      td.innerHTML = `<div style="padding:10px 20px;color:#999;font-size:0.85rem">ไม่มีรายการในเดือนนี้</div>`;
+      tbody.appendChild(wtr);
+      return;
+    }
+
+    let totTon=0, totBv=0, totVat=0, totGd=0;
+    const invHtml = invRows.map((r,i) => {
+      const items = r.items || [];
+      const ids   = items.map(it=>it.cf_itemid||"").filter(Boolean).join(", ")||"—";
+      const names = items.map(it=>it.cf_itemname||"").filter(Boolean).join(", ")||"—";
+      totTon += r.sum_qty    || 0;
+      totBv  += r.before_vat || 0;
+      totVat += r.vat        || 0;
+      totGd  += r.grand      || 0;
+      return `<tr class="inv-row">
+        <td class="ctr indent-3">${i+1}</td>
+        <td class="ctr">${thaiDate(r.invoice_date)}</td>
+        <td class="ctr">${r.invoice_number||"—"}</td>
+        <td class="ctr">${r.personid||"—"}</td>
+        <td class="wrap">${r.company||"—"}</td>
+        <td class="ctr" style="font-size:0.75rem">${r.cf_taxid||"—"}</td>
+        <td class="ctr">${r.branch_text||"—"}</td>
+        <td class="wrap">${r.driver_name||"—"}</td>
+        <td class="ctr">${ids}</td>
+        <td class="wrap">${names}</td>
+        <td class="num">${fmt3(r.sum_qty)}</td>
+        <td class="num">${fmt2(r.before_vat)}</td>
+        <td class="num">${fmt2(r.vat)}</td>
+        <td class="num">${fmt2(r.grand)}</td>
+      </tr>`;
+    }).join("");
+
+    td.innerHTML = `
+      <div class="inv-section" style="overflow-x:auto">
+        <table class="inv-tbl">
+          <thead><tr>
+            <th class="indent-3" style="text-align:center">#</th>
+            <th>วันที่</th><th>เลขที่ใบกำกับ</th><th>รหัสลูกค้า</th>
+            <th style="text-align:left">ชื่อบริษัท</th>
+            <th>Tax ID</th><th>สถานที่</th>
+            <th style="text-align:left">คนขับรถ</th>
+            <th>รหัสสินค้า</th>
+            <th style="text-align:left">รายการสินค้า</th>
+            <th style="text-align:right">จำนวนตัน</th>
+            <th style="text-align:right">มูลค่าก่อน VAT</th>
+            <th style="text-align:right">VAT 7%</th>
+            <th style="text-align:right">รวม</th>
+          </tr></thead>
+          <tbody>
+            ${invHtml}
+            <tr class="inv-total">
+              <td colspan="10" class="indent-3" style="text-align:right">รวม ${invRows.length} รายการ</td>
+              <td class="num">${fmt3(totTon)}</td>
+              <td class="num">${fmt2(totBv)}</td>
+              <td class="num">${fmt2(totVat)}</td>
+              <td class="num">${fmt2(totGd)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>`;
+    tbody.appendChild(wtr);
+  }
+
+  /* ===== HELPERS ===== */
+  function mkTr(cls) {
+    const tr = document.createElement("tr");
+    tr.className = cls;
+    return tr;
+  }
+
+  function sum(rows) {
+    return rows.reduce((a,r) => ({
+      count:      a.count      + (r.count||0),
+      before_vat: a.before_vat + (r.before_vat||0),
+      vat:        a.vat        + (r.vat||0),
+      grand:      a.grand      + (r.grand||0),
+    }), { count:0, before_vat:0, vat:0, grand:0 });
+  }
+
+  function pruneHalvesMonths(year) {
+    S.openHalves.forEach(k => { if (k.startsWith(year)) S.openHalves.delete(k); });
+    S.openMonths.forEach(k => { if (k.startsWith(year)) S.openMonths.delete(k); });
+  }
+
+  function setStatus(msg, loading) {
+    statusBar.classList.remove("hidden");
+    statusBar.innerHTML = loading ? `<span class="spinner"></span>${msg}` : msg;
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>

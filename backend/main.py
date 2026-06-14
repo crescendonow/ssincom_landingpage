@@ -4,8 +4,9 @@ import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, RedirectResponse
+import httpx
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import get_settings
@@ -110,6 +111,22 @@ async def create_contact(contact: ContactRequest) -> ContactResponse:
 
     email_sent = await send_contact_email(settings, contact, idx, pdgroup_name)
     return ContactResponse(ok=True, idx=idx, email_sent=email_sent)
+
+
+@app.get("/api/dashboard/saletax_summary", include_in_schema=False)
+async def proxy_saletax_summary(request: Request) -> JSONResponse:
+    url = f"{settings.bill_base_url}/api/saletax/summary"
+    async with httpx.AsyncClient(timeout=30) as client:
+        r = await client.get(url, params=dict(request.query_params))
+    return JSONResponse(content=r.json(), status_code=r.status_code)
+
+
+@app.get("/api/dashboard/saletax_list", include_in_schema=False)
+async def proxy_saletax_list(request: Request) -> JSONResponse:
+    url = f"{settings.bill_base_url}/api/saletax/list"
+    async with httpx.AsyncClient(timeout=30) as client:
+        r = await client.get(url, params=dict(request.query_params))
+    return JSONResponse(content=r.json(), status_code=r.status_code)
 
 
 app.mount("/frontend", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
