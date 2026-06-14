@@ -189,6 +189,8 @@
 
   const SUMMARY_API = "/api/dashboard/saletax_summary";
   const LIST_API    = "/api/dashboard/saletax_list";
+  const YEAR_PERIOD_RE = /^\d{4}$/;
+  const MONTH_PERIOD_RE = /^\d{4}-(0[1-9]|1[0-2])$/;
 
   const TH_MONTHS = [
     "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
@@ -248,7 +250,7 @@
     try {
       const res = await fetch(`${SUMMARY_API}?${p}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      let rows = await res.json();
+      let rows = normalizeSummaryRows(await res.json(), "year");
       if (yr) rows = rows.filter(r => r.period === String(yr));
       S.yearRows = rows;
       updateKPI(rows);
@@ -289,7 +291,10 @@
     });
   }
 
-  function monthNum(period) { return parseInt(period.split("-")[1]||"0",10); }
+  function monthNum(period) {
+    if (!MONTH_PERIOD_RE.test(period || "")) return 0;
+    return parseInt(period.split("-")[1], 10);
+  }
 
   /* ===== YEAR ROW ===== */
   function addYearRow(yr) {
@@ -330,7 +335,7 @@
     if (tr) tr.cells[0].innerHTML = `<span class="spinner"></span> กำลังโหลด...`;
     const res = await fetch(`${SUMMARY_API}?granularity=month&year=${year}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    S.monthCache[year] = await res.json();
+    S.monthCache[year] = normalizeSummaryRows(await res.json(), "month", year);
   }
 
   /* ===== HALF ROW ===== */
@@ -364,6 +369,7 @@
 
   /* ===== MONTH ROW ===== */
   function addMonthRow(mr) {
+    if (!MONTH_PERIOD_RE.test(mr.period || "")) return;
     const [y, m] = mr.period.split("-");
     const label  = `${TH_MONTHS[parseInt(m,10)-1]} ${thY(y)}`;
     const open   = S.openMonths.has(mr.period);
@@ -398,7 +404,7 @@
       try {
         const res = await fetch(`${LIST_API}?month=${period}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        S.invCache[period] = await res.json();
+        S.invCache[period] = asRows(await res.json());
         refreshTonKPI();
       } catch(e) {
         alert(`โหลดใบกำกับล้มเหลว: ${e.message}`);
@@ -489,6 +495,31 @@
   }
 
   /* ===== HELPERS ===== */
+  function asRows(payload) {
+    if (Array.isArray(payload)) return payload;
+    if (payload && Array.isArray(payload.value)) return payload.value;
+    return [];
+  }
+
+  function normalizeSummaryRows(payload, granularity, year) {
+    const periodPattern = granularity === "month" ? MONTH_PERIOD_RE : YEAR_PERIOD_RE;
+    const normalized = asRows(payload)
+      .filter(r => r && periodPattern.test(r.period || ""))
+      .map(r => ({
+        period: r.period,
+        count: Number(r.count || 0),
+        before_vat: Number(r.before_vat || 0),
+        vat: Number(r.vat || 0),
+        grand: Number(r.grand || 0),
+      }));
+
+    const scoped = granularity === "month" && year
+      ? normalized.filter(r => r.period.startsWith(`${year}-`))
+      : normalized;
+
+    return scoped.sort((a, b) => a.period.localeCompare(b.period));
+  }
+
   function mkTr(cls) {
     const tr = document.createElement("tr");
     tr.className = cls;

@@ -149,6 +149,35 @@ BILL_BASE_URL=https://ssincombill-production.up.railway.app
 
 ---
 
+## Fix: Dashboard data rendering
+
+### Root cause
+
+Production API `GET /api/dashboard/saletax_summary?granularity=month&year=2025` returns valid data, but the month summary can include rows that are not safe for the current frontend renderer:
+
+- `period: null`
+- month periods from another year, for example `2026-01`
+
+The original JavaScript passed the raw response directly into `render()`. When a bad month row reached `monthNum()` or `addMonthRow()`, the code called `period.split("-")` on `null`, which stopped rendering even though the API request succeeded.
+
+### Fix approach
+
+- Normalize summary responses before storing them in state.
+- Year summary accepts only `period` values matching `YYYY`.
+- Month summary accepts only `period` values matching `YYYY-MM`.
+- Month summary loaded for a selected year keeps only rows starting with that year, for example `2025-`.
+- Drop incomplete rows such as `period: null` before grouping H1/H2 or rendering month rows.
+- Keep the existing backend proxy and public API calls unchanged.
+
+### Expected behavior
+
+- `/frontend/dashboard_sand.html` shows year rows after the initial load.
+- Expanding year `2025` shows only valid `2025-xx` months.
+- Rows from `2026` and rows with `period: null` are ignored for the `2025` drill-down.
+- Browser console should not show `Cannot read properties of null (reading 'split')`.
+
+---
+
 ## Verification
 
 1. รัน local: `uvicorn backend.main:app --reload`
