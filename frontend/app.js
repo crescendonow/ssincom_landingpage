@@ -1,6 +1,7 @@
 const API = {
   pdgroups: "/api/pdgroups",
   contact: "/api/contact",
+  authMe: "/api/auth/me",
 };
 
 function isEnglish() {
@@ -13,6 +14,34 @@ function text(th, en) {
 
 function showMessage(message) {
   alert(message);
+}
+
+function setAuthNav(isAuthenticated) {
+  const dashboardLink = document.getElementById("dashboard-link");
+  const loginLink = document.getElementById("login-link");
+  const logoutLink = document.getElementById("logout-link");
+
+  if (dashboardLink) dashboardLink.hidden = !isAuthenticated;
+  if (loginLink) loginLink.hidden = isAuthenticated;
+  if (logoutLink) logoutLink.hidden = !isAuthenticated;
+}
+
+async function updateAuthNav() {
+  try {
+    const response = await fetch(API.authMe, {
+      headers: { Accept: "application/json" },
+      credentials: "same-origin",
+    });
+    if (!response.ok) {
+      throw new Error(`Auth status failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    setAuthNav(Boolean(data.authenticated));
+  } catch (error) {
+    console.error(error);
+    setAuthNav(false);
+  }
 }
 
 function switchTab(tabId, button) {
@@ -133,5 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("form-area")?.addEventListener("submit", submitContactForm);
+  updateAuthNav();
   loadPdGroups();
 });

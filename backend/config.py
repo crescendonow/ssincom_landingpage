@@ -22,6 +22,9 @@ class Settings:
     smtp_use_tls: bool
     mail_recipients: tuple[str, ...]
     bill_base_url: str
+    app_user: str
+    app_pass: str
+    session_secret: str
 
     @property
     def smtp_configured(self) -> bool:
@@ -54,4 +57,7 @@ def get_settings() -> Settings:
         smtp_use_tls=_env_bool("SMTP_USE_TLS", True),
         mail_recipients=recipients,
         bill_base_url=os.getenv("BILL_BASE_URL", "https://ssincombill-production.up.railway.app"),
+        app_user=os.getenv("APP_USER", "admin"),
+        app_pass=os.getenv("APP_PASS", "change-me"),
+        session_secret=os.getenv("SESSION_SECRET", "change-me-long-random-secret"),
     )

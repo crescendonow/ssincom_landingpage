@@ -16,6 +16,7 @@
 }
 html{scroll-behavior:smooth}
 body{font-family:'Kanit',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.7;font-weight:400}
+[hidden]{display:none!important}
 
 /* NAV */
 nav{background:var(--primary-dark);padding:0 6%;display:flex;align-items:center;justify-content:space-between;height:66px;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--gold)}
@@ -31,6 +32,8 @@ nav{background:var(--primary-dark);padding:0 6%;display:flex;align-items:center;
 .lang-btn:hover{border-color:var(--gold);color:var(--gold)}
 .dashboard-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(200,169,110,0.4);color:rgba(200,169,110,0.8);padding:6px 14px;border-radius:3px;font-size:13px;font-family:'Kanit',sans-serif;text-decoration:none;transition:all 0.2s;white-space:nowrap}
 .dashboard-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,0.08)}
+.login-btn{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.72);padding:6px 14px;border-radius:3px;font-size:13px;font-family:'Kanit',sans-serif;text-decoration:none;transition:all 0.2s;white-space:nowrap}
+.login-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,0.08)}
 
 /* HERO */
 .hero{background:linear-gradient(135deg,#161616 0%,#242424 55%,#2e2920 100%);color:white;padding:90px 6% 70px;position:relative;overflow:hidden;text-align:center}

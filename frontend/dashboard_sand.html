@@ -29,6 +29,8 @@
     .topbar .page-title { font-size: 0.95rem; color: #ccc; }
     .topbar a.home-link { margin-left: auto; color: #aaa; font-size: 0.85rem; text-decoration: none; }
     .topbar a.home-link:hover { color: var(--gold); }
+    .topbar a.logout-link { color: #aaa; font-size: 0.85rem; text-decoration: none; }
+    .topbar a.logout-link:hover { color: var(--gold); }
 
     .main { max-width: 1400px; margin: 0 auto; padding: 24px 16px 48px; }
 
@@ -142,6 +144,7 @@
   <span class="logo-text">S&S INCOM</span>
   <span class="page-title">รายงานยอดขายทราย</span>
   <a class="home-link" href="/frontend/">← หน้าหลัก</a>
+  <a class="logout-link" href="/logout?next=/frontend/">ออกจากระบบ</a>
 </div>
 
 <div class="main">
@@ -189,6 +192,8 @@
 
   const SUMMARY_API = "/api/dashboard/saletax_summary";
   const LIST_API    = "/api/dashboard/saletax_list";
+  const AUTH_API    = "/api/auth/me";
+  const LOGIN_URL   = `/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`;
   const YEAR_PERIOD_RE = /^\d{4}$/;
   const MONTH_PERIOD_RE = /^\d{4}-(0[1-9]|1[0-2])$/;
 
@@ -226,6 +231,11 @@
   document.getElementById("btnLoad").addEventListener("click", loadDashboard);
 
   /* ===== BOOT ===== */
+  async function init() {
+    if (!(await ensureAuthenticated())) return;
+    await boot();
+  }
+
   async function boot() {
     const cur = new Date().getFullYear();
     for (let y = cur; y >= cur - 4; y--) {
@@ -234,6 +244,31 @@
       selYear.appendChild(o);
     }
     await loadDashboard();
+  }
+
+  async function ensureAuthenticated() {
+    try {
+      const res = await fetch(AUTH_API, {
+        headers: { Accept: "application/json" },
+        credentials: "same-origin",
+      });
+      const data = res.ok ? await res.json() : {};
+      if (data.authenticated) return true;
+    } catch (err) {
+      console.error(err);
+    }
+
+    window.location.href = LOGIN_URL;
+    return false;
+  }
+
+  async function authFetch(url) {
+    const res = await fetch(url, { credentials: "same-origin" });
+    if (res.status === 401) {
+      window.location.href = LOGIN_URL;
+      throw new Error("Not authenticated");
+    }
+    return res;
   }
 
   /* ===== LOAD YEAR SUMMARY ===== */
@@ -248,7 +283,7 @@
     if (yr) p.set("year", yr);
 
     try {
-      const res = await fetch(`${SUMMARY_API}?${p}`);
+      const res = await authFetch(`${SUMMARY_API}?${p}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       let rows = normalizeSummaryRows(await res.json(), "year");
       if (yr) rows = rows.filter(r => r.period === String(yr));
@@ -333,7 +368,7 @@
   async function loadMonths(year) {
     const tr = tbody.querySelector(`tr[data-yr="${year}"]`);
     if (tr) tr.cells[0].innerHTML = `<span class="spinner"></span> กำลังโหลด...`;
-    const res = await fetch(`${SUMMARY_API}?granularity=month&year=${year}`);
+    const res = await authFetch(`${SUMMARY_API}?granularity=month&year=${year}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     S.monthCache[year] = normalizeSummaryRows(await res.json(), "month", year);
   }
@@ -402,7 +437,7 @@
     if (!S.invCache[period]) {
       render(); // show loading first
       try {
-        const res = await fetch(`${LIST_API}?month=${period}`);
+        const res = await authFetch(`${LIST_API}?month=${period}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         S.invCache[period] = asRows(await res.json());
         refreshTonKPI();
@@ -545,7 +580,7 @@
     statusBar.innerHTML = loading ? `<span class="spinner"></span>${msg}` : msg;
   }
 
-  boot();
+  init();
 })();
 </script>
 </body>

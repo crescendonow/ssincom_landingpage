@@ -27,10 +27,12 @@
     <li><a href="#contact"><span class="th-i">ติดต่อ</span><span class="en-i">Contact</span></a></li>
   </ul>
   <div class="nav-right">
-    <a href="/frontend/dashboard_sand.html" class="dashboard-btn">
+    <a href="/frontend/dashboard_sand.html" class="dashboard-btn" id="dashboard-link" hidden>
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Dashboard
     </a>
+    <a href="/login?next=/frontend/" class="login-btn" id="login-link">Login</a>
+    <a href="/logout?next=/frontend/" class="login-btn" id="logout-link" hidden>Logout</a>
     <button class="lang-btn" id="lang-toggle" type="button">EN / TH</button>
   </div>
 </nav>
